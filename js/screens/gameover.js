@@ -12,18 +12,35 @@ game.GameOverScreen = me.ScreenObject.extend({
         };
         me.save.add(this.savedData);
 
-        if (!me.save.topSteps) me.save.add({topSteps: game.data.steps});
+        var savedBest = 0;
+        try {
+            savedBest = parseInt(localStorage.getItem('clumsy_top_steps') || '0', 10);
+        } catch(e) {}
+
+        if (!me.save.topSteps) me.save.add({topSteps: savedBest});
+        if (savedBest > me.save.topSteps) me.save.topSteps = savedBest;
+
         if (game.data.steps > me.save.topSteps) {
             me.save.topSteps = game.data.steps;
             game.data.newHiScore = true;
+            try {
+                localStorage.setItem('clumsy_top_steps', me.save.topSteps.toString());
+            } catch(e) {}
         }
+
         me.input.bindKey(me.input.KEY.ENTER, "enter", true);
-        me.input.bindKey(me.input.KEY.SPACE, "enter", false)
+        me.input.bindKey(me.input.KEY.SPACE, "enter", false);
         me.input.bindPointer(me.input.pointer.LEFT, me.input.KEY.ENTER);
+
+        // Debounce to prevent accidental instant skip from panic flapping
+        var canRestart = false;
+        setTimeout(function() {
+            canRestart = true;
+        }, 400);
 
         this.handler = me.event.subscribe(me.event.KEYDOWN,
             function (action, keyCode, edge) {
-                if (action === "enter") {
+                if (action === "enter" && canRestart) {
                     me.state.change(me.state.MENU);
                 }
             });
@@ -50,7 +67,7 @@ game.GameOverScreen = me.ScreenObject.extend({
         me.game.world.addChild(this.ground1, 11);
         me.game.world.addChild(this.ground2, 11);
 
-        // add the dialog witht he game information
+        // add the dialog with the game information
         if (game.data.newHiScore) {
             var newRect = new me.Sprite(
                 gameOverBG.width/2,
@@ -67,28 +84,26 @@ game.GameOverScreen = me.ScreenObject.extend({
                     [0, 0, me.game.viewport.width/2, me.game.viewport.height/2]
                 );
                 this.font = new me.Font('gamefont', 40, 'black', 'left');
-                this.steps = 'Steps: ' + game.data.steps.toString();
-                this.topSteps= 'Higher Step: ' + me.save.topSteps.toString();
+                this.steps = 'Score: ' + game.data.steps.toString();
+                this.topSteps= 'Best:  ' + me.save.topSteps.toString();
             },
 
             draw: function (renderer) {
                 var stepsText = this.font.measureText(renderer, this.steps);
-                var topStepsText = this.font.measureText(renderer, this.topSteps);
-                var scoreText = this.font.measureText(renderer, this.score);
 
-                //steps
+                // steps
                 this.font.draw(
                     renderer,
                     this.steps,
-                    me.game.viewport.width/2 - stepsText.width/2 - 60,
+                    me.game.viewport.width/2 - stepsText.width/2 - 50,
                     me.game.viewport.height/2
                 );
 
-                //top score
+                // top score
                 this.font.draw(
                     renderer,
                     this.topSteps,
-                    me.game.viewport.width/2 - stepsText.width/2 - 60,
+                    me.game.viewport.width/2 - stepsText.width/2 - 50,
                     me.game.viewport.height/2 + 50
                 );
             }

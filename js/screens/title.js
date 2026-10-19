@@ -49,12 +49,17 @@ game.TitleScreen = me.ScreenObject.extend({
                 this._super(me.Renderable, 'init', [0, 0, 100, 100]);
                 this.text = me.device.touch ? 'Tap to start' : 'PRESS SPACE OR CLICK LEFT MOUSE BUTTON TO START \n\t\t\t\t\t\t\t\t\t\t\tPRESS "M" TO MUTE SOUND';
                 this.font = new me.Font('gamefont', 20, '#000');
+                this.credits = 'Original by Ellison Leao  •  Ported by Oskar Gerlicz-Kowalczuk (Germaz Studio)';
+                this.creditsFont = new me.Font('gamefont', 12, '#333');
             },
             draw: function (renderer) {
                 var measure = this.font.measureText(renderer, this.text);
                 var xpos = me.game.viewport.width/2 - measure.width/2;
                 var ypos = me.game.viewport.height/2 + 50;
                 this.font.draw(renderer, this.text, xpos, ypos);
+
+                var credMeasure = this.creditsFont.measureText(renderer, this.credits);
+                this.creditsFont.draw(renderer, this.credits, me.game.viewport.width/2 - credMeasure.width/2, me.game.viewport.height - 25);
             }
         })), 12);
     },

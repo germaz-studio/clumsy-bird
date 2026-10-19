@@ -1,0 +1,139 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000;
+  color: #fff;
+  font-family: 'gamefont', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Allow mouse dragging. */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+
+  /* disable touch panning/zooming */
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
+#screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#screen canvas {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block;
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: fill;
+
+  /* disable scaling interpolation */
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -o-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+#share {
+  margin: 10px auto;
+  text-align: center;
+}
+
+#share .fb-share-button iframe {
+  margin-top: -4px;
+}
+
+@font-face {
+  font-family: 'gamefont';
+  src: url('data/css/gamefont.eot');
+  src: url('data/css/gamefont.eot?#iefix') format('embedded-opentype'),
+     url('data/css/gamefont.woff') format('woff'),
+     url('data/css/gamefont.ttf') format('truetype'),
+     url('data/css/gamefont.svg#gamefont') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.google {
+  position: absolute;
+  left:23%;
+}
+
+/* ==========================================================================
+   Gerlicz Studios Splash Screen & Mobile Controls
+   ========================================================================== */
+
+#germaz-splash {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+  user-select: none;
+  cursor: pointer;
+}
+
+#germaz-splash.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.as-logo {
+  color: #ffffff;
+  font-family: "Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: clamp(34px, 7vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  text-transform: lowercase;
+  text-align: center;
+  user-select: none;
+}
+
+/* Mobile Sound Toggle */
+#mobile-mute-btn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#mobile-mute-btn.muted {
+  background: rgba(180, 0, 0, 0.6);
+  border-color: #ff4d4d;
+}

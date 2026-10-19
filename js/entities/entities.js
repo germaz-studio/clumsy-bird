@@ -91,6 +91,7 @@ game.BirdEntity = me.Entity.extend({
         if (obj.type === 'hit') {
             me.game.world.removeChildNow(obj);
             game.data.steps++;
+            game.data.score = game.data.steps;
             me.audio.play('hit');
         }
     },
@@ -106,8 +107,8 @@ game.BirdEntity = me.Entity.extend({
         this.renderable.currentTransform.rotate(Number.prototype.degToRad(90));
         var finalPos = me.game.viewport.height - this.renderable.width/2 - 96;
         this.endTween
-            .to({y: currentPos}, 1000)
-            .to({y: finalPos}, 1000)
+            .to({y: currentPos}, 150)
+            .to({y: finalPos}, 450)
             .onComplete(function() {
                 me.state.change(me.state.GAME_OVER);
             });

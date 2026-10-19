@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
-        <title>Clumsy Bird</title>
+        <title>Clumsy Bird - Gerlicz Studios</title>
         <link rel="apple-touch-icon-precomposed" href="data/img/touch-icon-iphone.png"/>
         <link rel="apple-touch-icon-precomposed" sizes="120x120" href="data/img/touch-icon-iphone-retina.png"/>
         <link rel="shortcut icon" href="data/img/favicon.ico">
@@ -11,39 +11,80 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <meta name="apple-mobile-web-app-title" content="Clumsy Bird">
         <meta charset="UTF-8" />
-        <meta name="description" content="Clumsy Bird - A Flappy Bird clone using MelonJS"/>
-        <meta name="keywords" content="flappybird, flappy, bird, game, html5, melonjs,clone"/>
-        <meta name="robots" content="index, follow">
-        <meta name="google-site-verification" content="RDZI9SqVaffd48uHfZMv67-YdvviOMe2HuULEYqVgd4" />
-        <meta property="og:image" content="http://ellisonleao.github.io/clumsy-bird/data/img/bg.png" />
-        <meta property="og:title" content="Clumsy Bird - A Flappy Bird clone using MelonJS"/>
-        <meta property="og:url" content="http://ellisonleao.github.io/clumsy-bird/"/>
-        <meta property="og:site_name" content="Clumsy Bird - MelonJS"/>
-
-        <!-- Twitter Card -->
-        <meta name="twitter:hashtag" content="clumsybird" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" content="@ellisonleao" />
-        <meta name="twitter:creator" content="@ellisonleao" />
-        <meta name="twitter:title" content="Clumsy Bird" />
-        <meta name="twitter:description" content="A Flappy Bird melonJS clone" />
-
-        <!-- Humans -->
-        <link rel="author" href="humans.txt" />
+        <meta name="description" content="Clumsy Bird - Ported to Android by Oskar Gerlicz-Kowalczuk (Germaz Studio)"/>
     </head>
 
     <body>
+        <!-- [germaz studio] Adult Swim style Splash Screen -->
+        <div id="germaz-splash">
+            <span class="as-logo">[germaz studio]</span>
+        </div>
+
+        <!-- Touch Mute Button -->
+        <button id="mobile-mute-btn" title="Mute / Unmute Sound">🔊</button>
+
         <!-- Canvas placeholder -->
         <div id="screen"></div>
 
-        <!-- melonJS Library -->
-        <script type="text/javascript" src="js/melonJS-min.js" ></script>
-        <script type="text/javascript" src="build/clumsy-min.js" ></script>
+        <!-- melonJS Library & Scripts -->
+        <script type="text/javascript" src="js/melonJS-min.js"></script>
+        <script type="text/javascript" src="js/game.js"></script>
+        <script type="text/javascript" src="js/entities/entities.js"></script>
+        <script type="text/javascript" src="js/entities/HUD.js"></script>
+        <script type="text/javascript" src="js/screens/title.js"></script>
+        <script type="text/javascript" src="js/screens/play.js"></script>
+        <script type="text/javascript" src="js/screens/gameover.js"></script>
         <script type="text/javascript">
+            // [germaz studio] splash screen logic & audio unblock
+            (function() {
+                var splash = document.getElementById("germaz-splash");
+                var muteBtn = document.getElementById("mobile-mute-btn");
+                var dismissed = false;
+
+                function dismissSplash() {
+                    if (dismissed) return;
+                    dismissed = true;
+                    if (splash) {
+                        splash.classList.add("fade-out");
+                        setTimeout(function() {
+                            if (splash.parentNode) splash.parentNode.removeChild(splash);
+                        }, 500);
+                    }
+                    if (window.me && window.me.audio) {
+                        try {
+                            me.audio.resume();
+                        } catch(e) {}
+                    }
+                }
+
+                if (splash) splash.addEventListener("click", dismissSplash);
+
+                // Auto-advance after 1.8s or tap
+                setTimeout(dismissSplash, 1800);
+
+                // Obsługa wyciszenia na ekranie dotykowym
+                if (muteBtn) {
+                    muteBtn.addEventListener("click", function(e) {
+                        e.stopPropagation();
+                        if (window.game && window.me && window.me.audio) {
+                            game.data.muted = !game.data.muted;
+                            if (game.data.muted) {
+                                me.audio.disable();
+                                muteBtn.innerText = "🔇";
+                                muteBtn.classList.add("muted");
+                            } else {
+                                me.audio.enable();
+                                muteBtn.innerText = "🔊";
+                                muteBtn.classList.remove("muted");
+                            }
+                        }
+                    });
+                }
+            })();
+
             window.onReady(function onReady() {
                 game.onload();
             });
         </script>
-
     </body>
 </html>

@@ -1,37 +1,46 @@
-Clumsy Bird
-===========
+Clumsy Bird (Android Port by Gerlicz Studios)
+==============================================
 
-A MelonJS made "Flappy Bird" clone.
+Android port of **Clumsy Bird**, developed and adapted by **Oskar Gerlicz-Kowalczuk** under **Gerlicz Studios** as part of the **Germaz Studio** project, targeted for distribution on **F-Droid**.
 
-![](http://i.imgur.com/Slbvt65.png)
+---
 
-Play online at http://ellisonleao.github.io/clumsy-bird/
+## 🏆 Credits & Legal Information
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ellisonleao/clumsy-bird/tree/gh-pages)
+* **Original Game & Concept:** [Ellison Leão](https://github.com/ellisonleao)
+* **Original Repository:** https://github.com/ellisonleao/clumsy-bird
+* **Android Port & Mobile UX:** **Oskar Gerlicz-Kowalczuk** ([Germaz Studio](https://github.com/germaz-studio) / **Gerlicz Studios**)
+* **License:** **GNU General Public License v3.0 (GPL-3.0)** — full license terms available in `LICENSE.md`.
+* **Privacy Policy:** Fully offline, zero telemetry, zero analytics, zero permissions required.
 
-## Running Locally
+---
 
-- Install [Node](http://nodejs.org/download/) and [Grunt](http://gruntjs.com/)
-- Install the dependencies
+## 📱 Mobile Enhancements
 
+1. **Splash Screen / Intro:**
+   * Prominent attribution: *Ported to Android by Oskar Gerlicz-Kowalczuk (Gerlicz Studios / Germaz Studio)*.
+   * Full credit preserved for the original creator (*Ellison Leão*).
+   * Open Source GPLv3 license notice.
+2. **Touch & Mobile Controls:**
+   * One-touch anywhere on the screen to flap wings.
+   * On-screen touch mute/unmute toggle (`🔊` / `🔇`) replacing desktop-only 'M' key.
+   * Auto-scaling landscape viewport (`sensorLandscape`).
+3. **Native Android Wrapper (F-Droid Compliant):**
+   * Clean Java wrapper with zero Kotlin runtime footprint (optimized for low-RAM builds).
+   * Hardware accelerated WebView (`android:hardwareAccelerated="true"`).
+   * Secure local asset streaming via AndroidX `WebViewAssetLoader` (no CORS or Web Audio autoplay restrictions).
+   * 100% Free and Open Source toolchain compliance.
+
+---
+
+## 🛠️ Build Instructions
+
+Configured for low-memory environments (e.g. 4GB RAM without swap) via `-Xmx512m` single-use daemon:
+
+```bash
+cd android
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk ./gradlew assembleDebug --no-daemon
 ```
-npm install
-```
 
-Then just type on your shell:
-
-```
-grunt connect
-```
-
-Open your browser at `http://localhost:8001/`
-
-## Making your customization
-
-See [CUSTOMIZING](https://github.com/ellisonleao/clumsy-bird/blob/master/CUSTOMIZING.md)
-
-## Some nice games made with this project
-
-[Checkout here](https://github.com/ellisonleao/clumsy-bird/wiki/Games-using-clumsy-bird-code)
-
-Some thoughts about this code you can find on [my blog post](https://medium.com/@ellisonleao/clumsy-bird-an-open-source-flappy-bird-clone-cf615724730f)
+Output APK will be generated at:
+`android/app/build/outputs/apk/debug/app-debug.apk`
