@@ -1,12 +1,11 @@
 Categories:
-  - Games
+  - Casual Game
 License: GPL-3.0-or-later
 AuthorName: Ellison Leão
 SourceCode: https://github.com/germaz-studio/clumsy-bird
 IssueTracker: https://github.com/germaz-studio/clumsy-bird/issues
 
 AutoName: Clumsy Bird
-Summary: Flappy Bird clone ported to Android
 Description: |-
   Clumsy Bird is an open-source arcade game, originally created with MelonJS,
   now ported to Android for F-Droid by Oskar Gerlicz-Kowalczuk (Germaz Studio).
@@ -38,7 +37,7 @@ Builds:
       - yes
     output: app/build/outputs/apk/release/app-release-unsigned.apk
 
-AutoUpdateMode: Version v%v
+AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: 1.0.1
 CurrentVersionCode: 2
