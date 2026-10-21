@@ -8,7 +8,7 @@ IssueTracker: https://github.com/germaz-studio/clumsy-bird/issues
 Summary: Clumsy Bird - Flappy Bird clone ported to Android
 Description: |-
   Clumsy Bird is a fun and lightweight Flappy Bird clone originally built with MelonJS.
-  This version is ported to Android for F-Droid by Oskar Gerlicz-Kowalczuk (Germaz Studio / Gerlicz Studios).
+  This version is ported to Android for F-Droid by Oskar Gerlicz-Kowalczuk (Germaz Studio).
 
   Features:
   - Fullscreen edge-to-edge scaling with zero letterboxing
@@ -20,8 +20,8 @@ Description: |-
   - 100% Free and Open Source (GNU GPL v3.0)
 
   Credits:
-  - Original game and assets by Ellison Leão
-  - Android port and mobile adaptations by Oskar Gerlicz-Kowalczuk (Germaz Studio / Gerlicz Studios)
+  * Original game and assets by Ellison Leão
+  * Android port and mobile adaptations by Oskar Gerlicz-Kowalczuk (Germaz Studio)
 
 RepoType: git
 Repo: https://github.com/germaz-studio/clumsy-bird.git
@@ -33,8 +33,19 @@ Builds:
     subdir: android
     gradle:
       - yes
+    scanignore:
+      - package.json
+
+  - versionName: 1.0.1
+    versionCode: 2
+    commit: v1.0.1
+    subdir: android
+    gradle:
+      - yes
+    scanignore:
+      - package.json
 
 AutoUpdateMode: Version v%v
 UpdateCheckMode: Tags
-CurrentVersion: 1.0.0
-CurrentVersionCode: 1
+CurrentVersion: 1.0.1
+CurrentVersionCode: 2

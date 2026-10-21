@@ -1,7 +1,7 @@
-Clumsy Bird (Android Port by Gerlicz Studios)
+Clumsy Bird (Android Port by Germaz Studio)
 ==============================================
 
-Android port of **Clumsy Bird**, developed and adapted by **Oskar Gerlicz-Kowalczuk** under **Gerlicz Studios** as part of the **Germaz Studio** project, targeted for distribution on **F-Droid**.
+Android port of **Clumsy Bird**, developed and adapted by **Oskar Gerlicz-Kowalczuk** under **Germaz Studio**, targeted for distribution on **F-Droid**.
 
 ---
 
@@ -9,7 +9,7 @@ Android port of **Clumsy Bird**, developed and adapted by **Oskar Gerlicz-Kowalc
 
 * **Original Game & Concept:** [Ellison Leão](https://github.com/ellisonleao)
 * **Original Repository:** https://github.com/ellisonleao/clumsy-bird
-* **Android Port & Mobile UX:** **Oskar Gerlicz-Kowalczuk** ([Germaz Studio](https://github.com/germaz-studio) / **Gerlicz Studios**)
+* **Android Port & Mobile UX:** **Oskar Gerlicz-Kowalczuk** ([Germaz Studio](https://github.com/germaz-studio))
 * **License:** **GNU General Public License v3.0 (GPL-3.0)** — full license terms available in `LICENSE.md`.
 * **Privacy Policy:** Fully offline, zero telemetry, zero analytics, zero permissions required.
 
@@ -18,7 +18,7 @@ Android port of **Clumsy Bird**, developed and adapted by **Oskar Gerlicz-Kowalc
 ## 📱 Mobile Enhancements
 
 1. **Splash Screen / Intro:**
-   * Prominent attribution: *Ported to Android by Oskar Gerlicz-Kowalczuk (Gerlicz Studios / Germaz Studio)*.
+   * Minimalist Adult Swim style `[germaz studio]` intro screen.
    * Full credit preserved for the original creator (*Ellison Leão*).
    * Open Source GPLv3 license notice.
 2. **Touch & Mobile Controls:**

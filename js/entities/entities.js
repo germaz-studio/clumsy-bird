@@ -13,24 +13,14 @@ game.BirdEntity = me.Entity.extend({
         this.renderable.addAnimation("flying", [0, 1, 2]);
         this.renderable.addAnimation("idle", [0]);
         this.renderable.setCurrentAnimation("flying");
-        //this.renderable.anchorPoint = new me.Vector2d(0.1, 0.5);
         this.body.removeShapeAt(0);
         this.body.addShape(new me.Ellipse(5, 5, 71, 51));
 
-        // a tween object for the flying physic effect
-        this.flyTween = new me.Tween(this.pos);
-        this.flyTween.easing(me.Tween.Easing.Exponential.InOut);
-
-        this.currentAngle = 0;
-        this.angleTween = new me.Tween(this);
-        this.angleTween.easing(me.Tween.Easing.Exponential.InOut);
-
-        // end animation tween
+        this.flyTween = null;
+        this.angleTween = null;
         this.endTween = null;
 
-        // collision shape
         this.collided = false;
-
         this.gravityForce = 0.2;
     },
 
@@ -46,18 +36,24 @@ game.BirdEntity = me.Entity.extend({
             this.gravityForce = 0.2;
             var currentPos = this.pos.y;
 
-            this.angleTween.stop();
-            this.flyTween.stop();
+            if (this.angleTween) {
+                this.angleTween.stop();
+            }
+            if (this.flyTween) {
+                this.flyTween.stop();
+            }
 
-
+            this.flyTween = new me.Tween(this.pos);
+            this.flyTween.easing(me.Tween.Easing.Exponential.InOut);
             this.flyTween.to({y: currentPos - 72}, 50);
             this.flyTween.start();
 
+            this.angleTween = new me.Tween(this);
+            this.angleTween.easing(me.Tween.Easing.Exponential.InOut);
             this.angleTween.to({currentAngle: that.maxAngleRotation}, 50).onComplete(function(angle) {
                 that.renderable.currentTransform.rotate(that.maxAngleRotation);
-            })
+            });
             this.angleTween.start();
-
         } else {
             this.gravityForce += 0.2;
             this.pos.y += me.timer.tick * this.gravityForce;
@@ -68,10 +64,13 @@ game.BirdEntity = me.Entity.extend({
             }
         }
         this.renderable.currentTransform.rotate(this.currentAngle);
-        me.Rect.prototype.updateBounds.apply(this);
 
         var hitSky = -80; // bird height + 20px
-        if (this.pos.y <= hitSky || this.collided) {
+        var hitGround = me.game.viewport.height - 96 - 45;
+        if (this.pos.y <= hitSky || this.pos.y >= hitGround || this.collided) {
+            if (!this.collided) {
+                this.collided = true;
+            }
             game.data.start = false;
             me.audio.play("lose");
             this.endAnimation();
@@ -84,12 +83,13 @@ game.BirdEntity = me.Entity.extend({
     onCollision: function(response) {
         var obj = response.b;
         if (obj.type === 'pipe' || obj.type === 'ground') {
-            me.device.vibrate(500);
+            try {
+                me.device.vibrate(500);
+            } catch(e) {}
             this.collided = true;
         }
-        // remove the hit box
         if (obj.type === 'hit') {
-            me.game.world.removeChildNow(obj);
+            me.game.world.removeChild(obj);
             game.data.steps++;
             game.data.score = game.data.steps;
             me.audio.play('hit');
@@ -97,33 +97,56 @@ game.BirdEntity = me.Entity.extend({
     },
 
     endAnimation: function() {
-        me.game.viewport.fadeOut("#fff", 100);
-        var currentPos = this.pos.y;
-        this.endTween = new me.Tween(this.pos);
-        this.endTween.easing(me.Tween.Easing.Exponential.InOut);
+        if (this.endTween) {
+            return;
+        }
+        if (this.flyTween) {
+            this.flyTween.stop();
+            this.flyTween = null;
+        }
+        if (this.angleTween) {
+            this.angleTween.stop();
+            this.angleTween = null;
+        }
 
-        this.flyTween.stop();
+        var currentPos = this.pos.y;
         this.renderable.currentTransform.identity();
         this.renderable.currentTransform.rotate(Number.prototype.degToRad(90));
         var finalPos = me.game.viewport.height - this.renderable.width/2 - 96;
+
+        this.endTween = new me.Tween(this.pos);
+        this.endTween.easing(me.Tween.Easing.Exponential.InOut);
         this.endTween
             .to({y: currentPos}, 150)
             .to({y: finalPos}, 450)
             .onComplete(function() {
-                me.state.change(me.state.GAME_OVER);
+                me.state.change(me.state.GAME_OVER || me.state.GAMEOVER);
             });
         this.endTween.start();
+    },
+
+    onDestroyEvent: function() {
+        if (this.flyTween) {
+            this.flyTween.stop();
+            this.flyTween = null;
+        }
+        if (this.angleTween) {
+            this.angleTween.stop();
+            this.angleTween = null;
+        }
+        if (this.endTween) {
+            this.endTween.stop();
+            this.endTween = null;
+        }
     }
-
 });
-
 
 game.PipeEntity = me.Entity.extend({
     init: function(x, y) {
         var settings = {};
         settings.image = this.image = me.loader.getImage('pipe');
         settings.width = 148;
-        settings.height= 1664;
+        settings.height = 1664;
         settings.framewidth = 148;
         settings.frameheight = 1664;
 
@@ -135,24 +158,21 @@ game.PipeEntity = me.Entity.extend({
     },
 
     update: function(dt) {
-        // mechanics
         if (!game.data.start) {
             return this._super(me.Entity, 'update', [dt]);
         }
         this.pos.add(this.body.vel);
         if (this.pos.x < -this.image.width) {
             me.game.world.removeChild(this);
+            return false;
         }
-        me.Rect.prototype.updateBounds.apply(this);
-        this._super(me.Entity, 'update', [dt]);
-        return true;
-    },
-
+        return this._super(me.Entity, 'update', [dt]);
+    }
 });
 
 game.PipeGenerator = me.Renderable.extend({
     init: function() {
-        this._super(me.Renderable, 'init', [0, me.game.viewport.width, me.game.viewport.height, 92]);
+        this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
         this.alwaysUpdate = true;
         this.generate = 0;
         this.pipeFrequency = 92;
@@ -161,24 +181,27 @@ game.PipeGenerator = me.Renderable.extend({
     },
 
     update: function(dt) {
-        if (this.generate++ % this.pipeFrequency == 0) {
-            var posY = Number.prototype.random(
-                    me.video.renderer.getHeight() - 100,
-                    200
-            );
+        if (!game.data.start) {
+            return false;
+        }
+        if (this.generate++ % this.pipeFrequency === 0) {
+            var minPos = 200;
+            var maxPos = me.game.viewport.height - 100;
+            var posY = ~~(Math.random() * (maxPos - minPos)) + minPos;
             var posY2 = posY - me.game.viewport.height - this.pipeHoleSize;
-            var pipe1 = new me.pool.pull('pipe', this.posX, posY);
-            var pipe2 = new me.pool.pull('pipe', this.posX, posY2);
+
+            var pipe1 = me.pool.pull('pipe', this.posX, posY);
+            var pipe2 = me.pool.pull('pipe', this.posX, posY2);
             var hitPos = posY - 100;
-            var hit = new me.pool.pull("hit", this.posX, hitPos);
+            var hit = me.pool.pull("hit", this.posX, hitPos);
+
             pipe1.renderable.currentTransform.scaleY(-1);
             me.game.world.addChild(pipe1, 10);
             me.game.world.addChild(pipe2, 10);
             me.game.world.addChild(hit, 11);
         }
-        this._super(me.Entity, "update", [dt]);
-    },
-
+        return this._super(me.Renderable, "update", [dt]);
+    }
 });
 
 game.HitEntity = me.Entity.extend({
@@ -186,7 +209,7 @@ game.HitEntity = me.Entity.extend({
         var settings = {};
         settings.image = this.image = me.loader.getImage('hit');
         settings.width = 148;
-        settings.height= 60;
+        settings.height = 60;
         settings.framewidth = 148;
         settings.frameheight = 60;
 
@@ -202,16 +225,13 @@ game.HitEntity = me.Entity.extend({
     },
 
     update: function(dt) {
-        // mechanics
         this.pos.add(this.body.accel);
         if (this.pos.x < -this.image.width) {
             me.game.world.removeChild(this);
+            return false;
         }
-        me.Rect.prototype.updateBounds.apply(this);
-        this._super(me.Entity, "update", [dt]);
-        return true;
-    },
-
+        return this._super(me.Entity, "update", [dt]);
+    }
 });
 
 game.Ground = me.Entity.extend({
@@ -219,7 +239,7 @@ game.Ground = me.Entity.extend({
         var settings = {};
         settings.image = me.loader.getImage('ground');
         settings.width = 900;
-        settings.height= 96;
+        settings.height = 96;
         this._super(me.Entity, 'init', [x, y, settings]);
         this.alwaysUpdate = true;
         this.body.gravity = 0;
@@ -228,13 +248,10 @@ game.Ground = me.Entity.extend({
     },
 
     update: function(dt) {
-        // mechanics
         this.pos.add(this.body.vel);
-        if (this.pos.x < -this.renderable.width) {
-            this.pos.x = me.video.renderer.getWidth() - 10;
+        if (this.pos.x < -900) {
+            this.pos.x = me.game.viewport.width - 10;
         }
-        me.Rect.prototype.updateBounds.apply(this);
         return this._super(me.Entity, 'update', [dt]);
-    },
-
+    }
 });

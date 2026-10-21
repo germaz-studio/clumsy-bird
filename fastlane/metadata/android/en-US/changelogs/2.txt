@@ -1,0 +1,4 @@
+* Fix game entities and visuals disappearing after multiple games or extended play.
+* Fix entity pooling lifecycle, matrix transform reset, and HUD persistence leak.
+* Add lockfile and scanignore for F-Droid compliance.
+* Add Fastlane metadata.

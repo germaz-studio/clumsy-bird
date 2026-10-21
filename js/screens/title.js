@@ -5,13 +5,15 @@ game.TitleScreen = me.ScreenObject.extend({
         this.ground1 = null;
         this.ground2 = null;
         this.logo = null;
+        this.logoTween = null;
+        this.handler = null;
     },
 
     onResetEvent: function() {
         me.audio.stop("theme");
         game.data.newHiScore = false;
 
-        me.game.world.addChild(new BackgroundLayer('bg', 1));
+        me.game.world.addChild(new BackgroundLayer('bg', 1), 1);
         me.input.bindKey(me.input.KEY.ENTER, "enter", true);
         me.input.bindKey(me.input.KEY.SPACE, "enter", true);
         me.input.bindPointer(me.input.pointer.LEFT, me.input.KEY.ENTER);
@@ -30,22 +32,18 @@ game.TitleScreen = me.ScreenObject.extend({
         );
         me.game.world.addChild(this.logo, 10);
 
-        var that = this;
-        var logoTween = me.pool.pull("me.Tween", this.logo.pos)
+        this.logoTween = new me.Tween(this.logo.pos)
             .to({y: me.game.viewport.height/2 - 100}, 1000)
-            .easing(me.Tween.Easing.Exponential.InOut).start();
+            .easing(me.Tween.Easing.Exponential.InOut);
+        this.logoTween.start();
 
-        this.ground1 = me.pool.pull("ground", 0, me.video.renderer.getHeight() - 96);
-        this.ground2 = me.pool.pull("ground", me.video.renderer.getWidth(),
-                                    me.video.renderer.getHeight() - 96);
+        this.ground1 = me.pool.pull("ground", 0, me.game.viewport.height - 96);
+        this.ground2 = me.pool.pull("ground", me.game.viewport.width, me.game.viewport.height - 96);
         me.game.world.addChild(this.ground1, 11);
         me.game.world.addChild(this.ground2, 11);
 
         me.game.world.addChild(new (me.Renderable.extend ({
-            // constructor
             init: function() {
-                // size does not matter, it's just to avoid having a zero size
-                // renderable
                 this._super(me.Renderable, 'init', [0, 0, 100, 100]);
                 this.text = me.device.touch ? 'Tap to start' : 'PRESS SPACE OR CLICK LEFT MOUSE BUTTON TO START \n\t\t\t\t\t\t\t\t\t\t\tPRESS "M" TO MUTE SOUND';
                 this.font = new me.Font('gamefont', 20, '#000');
@@ -65,14 +63,19 @@ game.TitleScreen = me.ScreenObject.extend({
     },
 
     onDestroyEvent: function() {
-        // unregister the event
-        me.event.unsubscribe(this.handler);
+        if (this.handler) {
+            me.event.unsubscribe(this.handler);
+            this.handler = null;
+        }
+        if (this.logoTween) {
+            this.logoTween.stop();
+            this.logoTween = null;
+        }
         me.input.unbindKey(me.input.KEY.ENTER);
         me.input.unbindKey(me.input.KEY.SPACE);
         me.input.unbindPointer(me.input.pointer.LEFT);
         this.ground1 = null;
         this.ground2 = null;
-        me.game.world.removeChild(this.logo);
         this.logo = null;
     }
 });

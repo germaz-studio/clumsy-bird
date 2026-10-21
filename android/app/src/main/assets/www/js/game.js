@@ -8,7 +8,7 @@ var game = {
     },
 
     resources: [
-            // images
+        // images
         {name: "bg", type:"image", src: "data/img/bg.png"},
         {name: "clumsy", type:"image", src: "data/img/clumsy.png"},
         {name: "pipe", type:"image", src: "data/img/pipe.png"},
@@ -25,8 +25,7 @@ var game = {
         {name: "theme", type: "audio", src: "data/bgm/"},
         {name: "hit", type: "audio", src: "data/sfx/"},
         {name: "lose", type: "audio", src: "data/sfx/"},
-        {name: "wing", type: "audio", src: "data/sfx/"},
-
+        {name: "wing", type: "audio", src: "data/sfx/"}
     ],
 
     "onload": function() {
@@ -43,6 +42,9 @@ var game = {
     },
 
     "loaded": function() {
+        // Compatibility alias for melonJS state
+        me.state.GAME_OVER = me.state.GAMEOVER;
+
         me.state.set(me.state.MENU, new game.TitleScreen());
         me.state.set(me.state.PLAY, new game.PlayScreen());
         me.state.set(me.state.GAME_OVER, new game.GameOverScreen());
@@ -51,10 +53,11 @@ var game = {
         me.input.bindKey(me.input.KEY.M, "mute", true);
         me.input.bindPointer(me.input.KEY.SPACE);
 
+        // Safe instancing without corrupted recycled object states
         me.pool.register("clumsy", game.BirdEntity);
-        me.pool.register("pipe", game.PipeEntity, true);
-        me.pool.register("hit", game.HitEntity, true);
-        me.pool.register("ground", game.Ground, true);
+        me.pool.register("pipe", game.PipeEntity);
+        me.pool.register("hit", game.HitEntity);
+        me.pool.register("ground", game.Ground);
 
         me.state.change(me.state.MENU);
     }

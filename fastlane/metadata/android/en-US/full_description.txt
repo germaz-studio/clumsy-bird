@@ -1,0 +1,15 @@
+Clumsy Bird is an open-source arcade game, originally created with MelonJS, now ported to Android for F-Droid by Oskar Gerlicz-Kowalczuk (Germaz Studio).
+
+Tap anywhere on the screen to flap your wings, navigate through pipes, and compete for the highest score.
+
+Features:
+* Fullscreen edge-to-edge gameplay with responsive scaling
+* Simple and responsive one-touch controls
+* On-screen touch sound mute toggle
+* Local high score tracking
+* 100% Free and Open Source (GNU GPL v3.0)
+* Completely offline, zero telemetry, zero permissions required
+
+Credits:
+* Original game and concept by Ellison Leão
+* Android port and mobile adaptations by Oskar Gerlicz-Kowalczuk (Germaz Studio)

@@ -3,14 +3,14 @@ game.HUD = game.HUD || {};
 game.HUD.Container = me.Container.extend({
     init: function() {
         this._super(me.Container, 'init');
-        // persistent across level change
-        this.isPersistent = true;
+        // Do not persist across reset to prevent accumulating duplicate HUDs
+        this.isPersistent = false;
 
         // non collidable
         this.collidable = false;
 
-        // make sure our object is always draw first
-        this.z = Infinity;
+        // make sure our object is always drawn on top
+        this.z = 15;
 
         // give a name
         this.name = "HUD";
@@ -19,7 +19,6 @@ game.HUD.Container = me.Container.extend({
         this.addChild(new game.HUD.ScoreItem(5, 5));
     }
 });
-
 
 game.HUD.ScoreItem = me.Renderable.extend({
     init: function(x, y) {
@@ -36,7 +35,6 @@ game.HUD.ScoreItem = me.Renderable.extend({
         if (game.data.start && me.state.isCurrent(me.state.PLAY))
             this.stepsFont.draw(renderer, game.data.steps, me.game.viewport.width/2, 10);
     }
-
 });
 
 var BackgroundLayer = me.ImageLayer.extend({
@@ -46,10 +44,11 @@ var BackgroundLayer = me.ImageLayer.extend({
         settings.width = 900;
         settings.height = 600;
         settings.image = image;
-        settings.z = z;
+        settings.z = z || 1;
         settings.ratio = 1;
-        // call parent constructor
         this._super(me.ImageLayer, 'init', [0, 0, settings]);
+        this.floating = true;
+        this.isPersistent = false;
     },
 
     update: function() {
@@ -57,7 +56,7 @@ var BackgroundLayer = me.ImageLayer.extend({
             game.data.muted = !game.data.muted;
             if (game.data.muted){
                 me.audio.disable();
-            }else{
+            } else {
                 me.audio.enable();
             }
         }
