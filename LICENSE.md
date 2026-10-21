@@ -672,3 +672,11 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <http://www.gnu.org/philosophy/why-not-lgpl.html>.
+
+---
+
+## Trademark & Branding Notice
+
+The names "germaz", "germaz studio", and associated logos/branding (including the "[germaz studio]" boot splash) are trademarks and proprietary intellectual property of Oskar Gerlicz-Kowalczuk / Germaz Studio.
+
+The GNU General Public License applies to the software code and modifications, but does NOT grant any right or license to use the trademarks, trade names, service marks, logos, or brand identity of "germaz studio" without prior explicit written permission.

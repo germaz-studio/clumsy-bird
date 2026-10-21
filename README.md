@@ -44,3 +44,6 @@ JAVA_HOME=/usr/lib/jvm/java-17-openjdk ./gradlew assembleDebug --no-daemon
 
 Output APK will be generated at:
 `android/app/build/outputs/apk/debug/app-debug.apk`
+
+### Trademark & Branding Notice
+The names "germaz", "germaz studio", and the `[germaz studio]` logo/splash assets are proprietary marks of Oskar Gerlicz-Kowalczuk / Germaz Studio. The open-source license governing the code does not grant rights to use these brand assets or trademarks.
